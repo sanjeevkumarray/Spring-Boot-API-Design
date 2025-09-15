@@ -1,160 +1,189 @@
-# SpringBoot Task API
+Got it ✅ — you want the **entire README content** in **one single `README.md` file**.
 
-A small **Spring Boot** REST API for user authentication and task management — built for a take-home assignment.  
-Features: JWT-based authentication, BCrypt password hashing, H2 in-memory DB, layered architecture (Controller → Service → Repository), and global exception handling.
-
----
-
-## 🔧 Tech stack
-- Java 17
-- Spring Boot 3.x
-- Spring Security (JWT)
-- Spring Data JPA (H2)
-- Maven
-- JUnit (for tests, optional)
+Here’s the full content ready to copy into `README.md`:
 
 ---
 
-## 🚀 Quick start (GitHub clone + run)
+````markdown
+# 📌 SpringBoot Task API
 
+A small **Spring Boot REST API** for user authentication and task management — built for a take-home assignment.
+
+**Features:**  
+✅ JWT-based authentication  
+✅ BCrypt password hashing  
+✅ H2 in-memory DB  
+✅ Layered architecture (Controller → Service → Repository)  
+✅ Global exception handling with `@ControllerAdvice`  
+
+---
+
+## 🔧 Tech Stack
+- **Java 17**
+- **Spring Boot 3.x**
+- **Spring Security (JWT)**
+- **Spring Data JPA (H2)**
+- **Maven**
+- **JUnit** (for tests)
+
+---
+
+## 🚀 Quick Start
+
+### 1️⃣ Clone the project
 ```bash
-# 1. Clone
 git clone https://github.com/<your-username>/springboot-task-api.git
 cd springboot-task-api
+````
 
-# 2. Build and run
+### 2️⃣ Build & Run
+
+```bash
 ./mvnw clean package
 ./mvnw spring-boot:run
-# or use mvn if you don't have mvnw
+```
+
+Or with global Maven:
+
+```bash
 mvn clean package
 mvn spring-boot:run
 ```
 
-App will run on `http://localhost:8080`. H2 console: `http://localhost:8080/h2-console` (JDBC URL: `jdbc:h2:mem:testdb`, user `sa` / no password)
+App runs at: **[http://localhost:8080](http://localhost:8080)**
+H2 console: **[http://localhost:8080/h2-console](http://localhost:8080/h2-console)**
+(JDBC URL: `jdbc:h2:mem:testdb`, user: `sa`, password: *blank*)
 
 ---
 
-## 🔐 Authentication flow (high level)
-- Register user: `POST /auth/register` with `{ email, password, name }`. Passwords are hashed with BCrypt. Returns a JWT token.
-- Login user: `POST /auth/login` with `{ email, password }`. Returns `{ "accessToken": "<JWT>" }` on success.
-- Protect endpoints: Supply header `Authorization: Bearer <JWT>` to access `/tasks` endpoints.
+## 🔐 Authentication Flow (High-Level)
+
+* **Register user:** `POST /auth/register` with `{ email, password, name }`
+  → Password is stored hashed with BCrypt → Returns JWT token
+* **Login user:** `POST /auth/login` with `{ email, password }`
+  → Returns `{ "accessToken": "<JWT>" }`
+* **Protect endpoints:** Send header `Authorization: Bearer <JWT>` to access `/tasks/*`
 
 ---
 
 ## 📚 API Endpoints
 
 ### Auth
-- `POST /auth/register` — Register a new user. Body example:
-```json
-{ "email": "user@example.com", "password": "mypassword", "name": "John Doe" }
-```
-- `POST /auth/login` — Login and get token. Body example:
-```json
-{ "email": "user@example.com", "password": "mypassword" }
-```
-- `POST /auth/logout` — Stateless (client can discard token). Optionally implement blacklist on server for forced invalidation.
 
-### Tasks (Requires `Authorization: Bearer <token>`)
-- `POST /tasks` — Create a new task. Body example:
-```json
-{ "title": "Buy milk", "description": "From store", "status": "OPEN" }
-```
-- `GET /tasks` — Get all tasks for the logged-in user.
-- `PUT /tasks/{id}` — Update task (e.g., change status). Body example:
-```json
-{ "status": "DONE" }
-```
-- `DELETE /tasks/{id}` — Delete task (only owner can delete).
+| Method | Endpoint         | Description                              |
+| ------ | ---------------- | ---------------------------------------- |
+| POST   | `/auth/register` | Register a new user                      |
+| POST   | `/auth/login`    | Login & get token                        |
+| POST   | `/auth/logout`   | Stateless logout (client discards token) |
+
+### Tasks (Protected)
+
+| Method | Endpoint      | Description                      |
+| ------ | ------------- | -------------------------------- |
+| POST   | `/tasks`      | Create task                      |
+| GET    | `/tasks`      | Get all tasks for logged-in user |
+| PUT    | `/tasks/{id}` | Update task status               |
+| DELETE | `/tasks/{id}` | Delete task                      |
 
 ---
 
-## ✅ Expected HTTP status behaviour (examples)
-- 200 OK — Success responses for GET/PUT/POST (successful operations)
-- 201 Created — (optional) when creating a resource
-- 400 Bad Request — Invalid inputs, missing fields, invalid credentials at login
-- 401 Unauthorized — No or invalid token when accessing protected endpoints
-- 403 Forbidden — Accessing another user's task
-- 404 Not Found — Task or resource not found
+## ✅ Expected HTTP Status Codes
+
+* **200 OK** – Success for GET/PUT/POST (updates)
+* **201 Created** – On new task creation
+* **400 Bad Request** – Invalid inputs or login credentials
+* **401 Unauthorized** – No/invalid token when accessing `/tasks`
+* **403 Forbidden** – Accessing another user's task
+* **404 Not Found** – Task or resource not found
 
 ---
 
-## 🧪 Running tests (if included)
+## 🧪 Tests
+
+Run JUnit tests:
+
 ```bash
 ./mvnw test
 ```
 
-(If tests are not present yet, consider adding tests under `src/test/java` for at least the AuthController and TaskController.)
-
 ---
 
-## ⚙️ Configuration (application.properties)
-Key settings are in `src/main/resources/application.properties`:
+## 🧭 Project Structure
 
-```properties
-spring.datasource.url=jdbc:h2:mem:testdb
-spring.h2.console.enabled=true
-jwt.secret=YOUR_SECRET_HERE
-jwt.expiration=3600000
-```
-
-Make sure to change `jwt.secret` before production and do not commit secrets to GitHub (use environment variables or a secrets manager in real projects).
-
----
-
-## 🧭 Project structure (recommended)
 ```
 src/main/java/com/example/taskapi/
  ├─ config/        # Security, JWT utils, filters
  ├─ controller/    # REST controllers
  ├─ service/       # Business logic
  ├─ repository/    # JPA repositories
- ├─ entity/        # JPA entities (User, Task)
- ├─ dto/           # Request/response DTOs (optional)
- └─ exception/     # Global exception handling (@ControllerAdvice)
+ ├─ entity/        # Entities (User, Task)
+ ├─ dto/           # Request/response DTOs
+ └─ exception/     # Global exception handling
 ```
 
 ---
 
-## 🔁 Postman / curl examples
+## 🔁 Postman Collection
+
+A Postman collection with all endpoints is included in the repo:
+📄 **`SpringBoot-Task-API.postman_collection.json`**
+
+You can import it into Postman and test:
+
+* Register/Login
+* Copy JWT token into `jwtToken` variable
+* Run task CRUD requests
+
+---
+
+## 🔗 Example `curl` Requests
 
 ### Register
+
 ```bash
-curl -X POST http://localhost:8080/auth/register -H "Content-Type: application/json" -d '{ "email":"a@b.com","password":"pass","name":"A" }'
+curl -X POST http://localhost:8080/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{"email":"a@b.com","password":"pass","name":"A"}'
 ```
 
 ### Login
+
 ```bash
-curl -X POST http://localhost:8080/auth/login -H "Content-Type: application/json" -d '{ "email":"a@b.com","password":"pass" }'
-# Response: { "accessToken": "..." }
+curl -X POST http://localhost:8080/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"a@b.com","password":"pass"}'
 ```
 
-### Create Task (use token)
+### Create Task
+
 ```bash
-curl -X POST http://localhost:8080/tasks -H "Content-Type: application/json" -H "Authorization: Bearer <TOKEN>" -d '{ "title":"t","description":"d" }'
+curl -X POST http://localhost:8080/tasks \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer <TOKEN>" \
+  -d '{"title":"Buy milk","description":"From store","status":"OPEN"}'
 ```
 
 ---
 
-## 🧾 Example Git commit messages (clean history)
-- feat: initial project scaffold, add pom and main class
-- feat(auth): add registration and login with BCrypt and JWT
-- feat(task): add task CRUD and repository
-- chore: add README and example curl requests
-- test: add AuthController unit tests (if added)
+## ✅ Submission Checklist
+
+✔ All endpoints implemented & tested
+✔ Passwords stored hashed (BCrypt)
+✔ JWT token required for `/tasks`
+✔ Global exception handling present
+✔ README with setup & examples (this file)
+✔ Public GitHub repo with clean commits
 
 ---
 
-## ✅ Checklist for submission
-- [ ] All endpoints implemented and tested manually with Postman/curl
-- [ ] Passwords stored hashed (BCrypt)
-- [ ] Token-based auth (JWT) implemented and required for `/tasks`
-- [ ] Global exception handling present
-- [ ] README with run instructions & example requests (this file)
-- [ ] Public GitHub repository with clean commits
+**Author / Contact:**
+Sanjeev Kumar Ray — [GitHub Profile](https://github.com/sanjeevkumarray)
+
+```
 
 ---
 
-## Author / Contact
-Sanjeev Kumar Ray — add your GitHub profile link here.
+If you want, I can now **combine this README.md + all source code + Postman collection into a single ZIP** ready to push to GitHub.  
 
----
+Do you want me to do that next?
+```
