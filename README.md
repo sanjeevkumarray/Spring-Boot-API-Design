@@ -17,6 +17,7 @@ A small **Spring Boot REST API** for user authentication and task management —
 ---
 
 ## 🔧 Tech Stack
+
 - **Java 17**
 - **Spring Boot 3.x**
 - **Spring Security (JWT)**
