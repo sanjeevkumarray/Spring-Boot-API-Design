@@ -1,7 +1,4 @@
 
----
-
-````markdown
 # 📌 Spring Boot Task API
 
 A **RESTful API** for user authentication and task management, built with **Spring Boot** for a take-home assignment.
@@ -178,7 +175,5 @@ curl -X POST http://localhost:8080/tasks \
 **Author / Contact:**
 Sanjeev Kumar Ray — [GitHub Profile](https://github.com/sanjeevkumarray)
 
-```
 
----
 
